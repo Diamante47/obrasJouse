@@ -1,0 +1,77 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<style>
+    /* Estilo para la sección con el fondo de la imagen */
+    #form-container {
+        background-image: url("{% static 'plantilla/assets/img/hero-bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        padding: 50px 0;
+        min-height: 100vh;
+    }
+
+    /* Estilo para el formulario para que no ocupe toda la pantalla */
+    #frm_editar_fecha_inicio {
+        background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 600px; /* Máximo ancho para el formulario */
+        margin: 0 auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<section id="hero" class="section dark-background">
+    <div id="form-container">
+        <form style="background-color: rgba(158, 158, 158, 0.9)" enctype="multipart/form-data" action="{% url 'procesarEdicionFechaInicio' fecha_inicio.id %}" method="post" class="form-control justify-content text-center" id="frm_editar_fecha_inicio">
+            {% csrf_token %}
+            
+            <!-- Bloque para mostrar mensajes -->
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <label for="txt_fecha_inicio"><b>Fecha de Inicio:</b></label>
+            <input type="date" name="txt_fecha_inicio" id="txt_fecha_inicio" class="form-control" value="{{ fecha_inicio.fecha_inicio|date:'Y-m-d' }}" required>
+            <br>
+
+            <label for="txt_obra"><b>Obra Pública:</b></label>
+            <input type="text" name="txt_obra" id="txt_obra" class="form-control" value="{{ fecha_inicio.obra.nombre }}" disabled>
+            <br>
+
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="{% url 'listadoFechasInicio' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+    </div>
+</section>
+
+<script>
+    $.validator.addMethod("rfc", function(value, element) {
+        return this.optional(element) || /^[A-Z&Ñ]{3,4}\d{6}[A-Z0-9]{3}$/.test(value);
+    }, "Por favor ingrese un RFC válido");
+</script>
+
+<script>
+    $("#frm_editar_fecha_inicio").validate({
+        rules:{
+            "txt_fecha_inicio": {
+                required: true,
+            },
+        },
+        messages:{
+            "txt_fecha_inicio": {
+                required: "Por favor ingrese la fecha de inicio de la obra",
+            },
+        },
+    });
+</script>
+
+{% endblock %}

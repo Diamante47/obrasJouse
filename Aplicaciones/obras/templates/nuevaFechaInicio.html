@@ -1,0 +1,84 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<section id="hero" class="hero section dark-background">
+    <img src="{% static 'plantilla/assets/img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
+    <div class="container mt-5">
+        <h1 class="text-center mb-3">Registrar Nueva Fecha de Inicio</h1>
+        <form style="background-color: rgba(158, 158, 158, 0.9)" enctype="multipart/form-data" action="{% url 'guardarFechaInicio' %}" method="post" class="form-control justify-content text-center" id="frm_nueva_fecha_inicio">
+            {% csrf_token %}
+            
+            <!-- Bloque para mostrar mensajes -->
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <label for="txt_obra"><b>Obra Pública:</b></label>
+            <select name="txt_obra" id="txt_obra" class="form-control" required>
+                <option value="">Seleccione una obra</option>
+                {% for obra in obras %}
+                    <option value="{{ obra.id }}">{{ obra.nombre }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <label for="txt_fecha_inicio"><b>Fecha de Inicio:</b></label>
+            <input type="date" name="txt_fecha_inicio" id="txt_fecha_inicio" class="form-control" required>
+            <br>
+
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="{% url 'listadoFechasInicio' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+    </div>
+</section>
+
+<style>
+    .alert {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+    }
+    .alert.error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    .alert.success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+</style>
+
+<script>
+    $("#frm_nueva_fecha_inicio").validate({
+        rules: {
+            "txt_obra": {
+                required: true,
+            },
+            "txt_fecha_inicio": {
+                required: true,
+                date: true,
+            },
+        },
+        messages: {
+            "txt_obra": {
+                required: "Por favor seleccione una obra pública",
+            },
+            "txt_fecha_inicio": {
+                required: "Por favor ingrese la fecha de inicio",
+                date: "Por favor ingrese una fecha válida",
+            },
+        },
+    });
+</script>
+
+{% endblock %}

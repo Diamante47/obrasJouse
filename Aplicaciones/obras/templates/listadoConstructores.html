@@ -1,0 +1,181 @@
+
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+    <section id="hero" class="hero section dark-background">
+        <div class="container mt-5">
+            <h1 class="text-center mb-3">Listado de Constructores</h1>
+            <br><br><br>
+            <!-- Bloque para mostrar mensajes -->
+
+
+
+            <table border="1" class="table table-bordered table-striped table-hover justify-content text-center display" id="tbl_constructores">
+                <thead>
+                    <tr>
+                        <th>Cédula</th>
+                        <th>Apellidos</th>
+                        <th>Nombres</th>
+                        <th>Foto</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for constructor in constructores %}
+                        <tr>
+                            <td>{{ constructor.cedula }}</td>
+                            <td>{{ constructor.apellido }}</td>
+                            <td>{{ constructor.nombre }}</td>
+                            <td>
+                                {% if constructor.foto and constructor.foto.url %}
+                                <a  href="{{constructor.foto.url}}" target="_blank">
+                                    <img src="{{constructor.foto.url}}" alt=""
+                                    height="100px" width="100px">
+                                </a><br>
+                                <a download  href="{{constructor.foto.url}}">
+                                    Descargar
+                                </a>
+                            {% else %}
+                                <p>No hay foto disponible.</p>
+                            {% endif %}
+                            </td>
+                            <td>{{ constructor.telefono }}</td>
+                            <td>{{ constructor.email }}</td>
+                            <td>
+                                <a href="/editarConstructor/{{ constructor.id }}" class="btn btn-custom"><i class="fas fa-edit"></i></a>
+                                <a onclick="return confirm('¿Estás seguro de eliminar este constructor?');"
+                                href="{% url 'eliminarConstructor' constructor.id %}" class="btn btn-custom"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br><br><br>
+
+            <style>
+                #hero {
+                    background-image: url("{% static 'plantilla/assets/img/hero-bg.jpg' %}");
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    min-height: 400px; /* Ajusta esto según tus necesidades */
+                }
+
+                #hero::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(0, 0, 0, 0.5); /* Color negro con 50% de transparencia */
+                    z-index: 1;
+                }
+                
+                /* Asegúrate de que el contenido se vea encima del fondo oscuro */
+                #hero * {
+                    position: relative;
+                    z-index: 2;
+                    color: white; /* Esto asegura que el texto sea legible */
+                }
+
+                #tbl_constructores {
+                    background-color: rgba(255, 255, 255, 0.2); /* blanco con transparencia */
+                }
+            
+                /* Asegúrate de que el texto y otros elementos dentro de la tabla sean legibles */
+                #tbl_constructores th, #tbl_constructores td {
+                    background-color: rgba(158, 158, 158, 0.9); /* opcional, para celdas específicas */
+                }
+
+                .alert {
+                    padding: 10px;
+                    margin-bottom: 15px;
+                    border: 1px solid transparent;
+                    border-radius: 5px;
+                }
+                .alert.error {
+                    color: #721c24;
+                    background-color: #f8d7da;
+                    border-color: #f5c6cb;
+                }
+                
+                .table img {
+                    width: 100px;  /* o el tamaño que prefieras */
+                    height: 100px;
+                    object-fit: cover;  /* Esto asegura que la imagen se recorte para ajustarse al tamaño */
+                }
+                /* Estilo para los botones personalizados con iconos */
+                .btn-custom {
+                    background-color: #ffc451; /* El color de fondo (puedes cambiarlo) */
+                    color: white; /* El color del texto/icono */
+                    border: none; /* Sin borde */
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    display: inline-flex; /* Usamos flexbox para alinear el icono y el texto */
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 5px; /* Opcional: redondear las esquinas */
+                }
+
+                .btn-custom:hover {
+                    background-color:rgb(231, 204, 149); /* Cambia el color al pasar el mouse */
+                }
+            </style>
+
+        </div>
+    </section>
+    <script>
+        $(document).ready(function () {
+            $('#tbl_constructores').DataTable({
+                language: {
+                    search: "Filtrar:",
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    paginate: {
+                        first: "Primero",
+                        last: "Último",
+                        next: "Siguiente",
+                        previous: "Anterior"
+                    },
+                    zeroRecords: "No se encontraron coincidencias",
+                    infoEmpty: "No hay registros disponibles",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)"
+                },
+                order: [[0, 'asc']], // Ordenar por la primera columna (Nombre)
+                columnDefs: [
+                    { orderable: false, targets: [-1, 4] } // Deshabilitar ordenación en la columna de acciones y fotos
+                ],
+                dom: 'Bfrtip', // Activa los botones
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Excel',
+                        exportOptions: {
+                            columns: ':not(:nth-child(6)):not(:last-child)' // Excluir columna 6 (Foto) y última columna (Acciones)
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF',
+                        exportOptions: {
+                            columns: ':not(:nth-child(6)):not(:last-child)' // Excluir columna 6 (Foto) y última columna (Acciones)
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir',
+                        exportOptions: {
+                            columns: ':not(:nth-child(6)):not(:last-child)' // Excluir columna 6 (Foto) y última columna (Acciones)
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+
+{% endblock %}

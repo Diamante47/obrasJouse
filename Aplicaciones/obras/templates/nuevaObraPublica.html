@@ -1,0 +1,120 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+<head>
+</head>
+<section id="hero" class="hero section dark-background">
+    <img src="{% static 'plantilla/assets/img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
+    <div class="container mt-5">
+        <h1 class="text-center mb-3">Registrar Nueva Obra Pública</h1>
+        <form style="background-color: rgba(158, 158, 158, 0.9)" enctype="multipart/form-data" action="{% url 'guardarObraPublica' %}" method="post" class="form-control justify-content text-center" id="frm_nueva_obra">
+            {% csrf_token %}
+            
+            <!-- Bloque para mostrar mensajes -->
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <label for="txt_nombre"><b>Nombre de la Obra:</b></label>
+            <input type="text" name="txt_nombre" id="txt_nombre" class="form-control" required>
+            <br>
+
+            <label for="txt_ubicacion"><b>Ubicación:</b></label>
+            <input type="text" name="txt_ubicacion" id="txt_ubicacion" class="form-control">
+            <br>
+
+            <label for="txt_descripcion"><b>Descripción:</b></label>
+            <textarea name="txt_descripcion" id="txt_descripcion" class="form-control" rows="3"></textarea>
+            <br>
+
+            <label for="txt_estado"><b>Estado de la Obra:</b></label>
+            <select name="txt_estado" id="txt_estado" class="form-control">
+                <option value="planeacion">Planeación</option>
+                <option value="en_proceso">En Proceso</option>
+                <option value="finalizada">Finalizada</option>
+                <option value="cancelada">Cancelada</option>
+            </select>
+            <br>
+
+            <label for="txt_constructor"><b>Seleccionar Constructor:</b></label>
+            <select name="txt_constructor" id="txt_constructor" class="form-control">
+                {% for constructor in constructores %}
+                    <option value="{{ constructor.id }}">{{ constructor.nombre }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="{% url 'listadoObrasPublicas' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+    </div>
+</section>
+
+<style>
+    .alert {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+    }
+    .alert.error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    .alert.success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+</style>
+
+<script>
+    $("#frm_nueva_obra").validate({
+        rules:{
+            "txt_nombre": {
+                required: true,
+            },
+            "txt_ubicacion": {
+                required: true,
+            },
+            "txt_descripcion": {
+                required: true,
+            },
+
+        },
+        messages:{
+            "txt_nombre": {
+                required: "Por favor ingrese el nombre de la obra",
+            },
+            "txt_ubicacion": {
+                required: "Por favor ingrese una ubicacion",
+            },
+            "txt_descripcion": {
+                required: "Por favor ingrese una descripcion",
+            }
+        }
+    });
+</script>
+<script>
+    $.validator.addMethod("rfc", function(value, element) {
+        return this.optional(element) || /^[A-Z&Ñ]{3,4}\d{6}[A-Z0-9]{3}$/.test(value);
+    }, "Por favor ingrese un RFC válido");
+</script>
+<script>
+    $("#txt_foto").fileinput({
+            //Language: "es",
+            allowedFileExtensions: ["png|jpg|jpeg"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            dhowClose: false
+    });
+</script>
+
+{% endblock %}

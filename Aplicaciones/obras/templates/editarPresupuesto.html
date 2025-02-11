@@ -1,0 +1,75 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<style>
+    /* Estilo para la sección con el fondo de la imagen */
+    #form-container {
+        background-image: url("{% static 'plantilla/assets/img/hero-bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        padding: 50px 0;
+        min-height: 100vh;
+    }
+
+    /* Estilo para el formulario para que no ocupe toda la pantalla */
+    #frm_editar_presupuesto {
+        background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 600px; /* Máximo ancho para el formulario */
+        margin: 0 auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<section id="hero" class="section dark-background">
+    <div id="form-container">
+        <form style="background-color: rgba(158, 158, 158, 0.9)" enctype="multipart/form-data" action="{% url 'procesarEdicionPresupuesto' presupuesto.id %}" method="post" class="form-control justify-content text-center" id="frm_editar_presupuesto">
+            {% csrf_token %}
+            
+            <!-- Bloque para mostrar mensajes -->
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <label for="txt_obra"><b>Obra Pública:</b></label>
+            <input type="text" name="txt_obra" id="txt_obra" class="form-control" value="{{ presupuesto.obra.nombre }}" disabled>
+            <br>
+
+            <label for="txt_presupuesto"><b>Monto Aprobado:</b></label>
+            <input type="number" step="0.01" name="txt_presupuesto" id="txt_presupuesto" class="form-control" value="{{ presupuesto.presupuesto }}" required>
+            <br>
+
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="{% url 'listadoPresupuestos' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+    </div>
+</section>
+
+<script>
+    $("#frm_editar_presupuesto").validate({
+        rules: {
+            "txt_presupuesto": {
+                required: true,
+                number: true,
+                min: 0,  // Aseguramos que el monto sea positivo
+            }
+        },
+        messages: {
+            "txt_presupuesto": {
+                required: "Por favor ingrese el monto aprobado",
+                number: "El monto debe ser un número válido",
+                min: "El monto debe ser mayor o igual a 0",
+            }
+        },
+    });
+</script>
+
+{% endblock %}

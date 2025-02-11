@@ -1,0 +1,293 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Pagina de obras</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+   <!--Importando jquery-->
+   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+   <!--Importando izitoast-->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" integrity="sha512-DIW4FkYTOxjCqRt7oS9BFO+nVOwDL4bzukDyDtMO7crjUZhwpyrWBFroq+IqRe6VnJkTpRAS6nhDvf0w+wHmxg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <!--Importando jquery validate-->
+   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+
+   <!-- DataTables CSS -->
+   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+   <!-- DataTables JS -->
+   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+   <!--File input-->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.4/js/fileinput.min.js" integrity="sha512-0wQvB58Ha5coWmcgtg4f11CTSSxfrfLClUp9Vy0qhzYzCZDSnoB4Vhu5JXJFs7rU24LE6JsH+6hpP7vQ22lk5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.5.4/css/fileinput.min.css" integrity="sha512-yDVMONIXJPPAoULZ92Ygngsn8ZUGB4ejm6fCc6q9ZvdH8blFAOgg75XZSEaAJ5m4E/yPI1BAi5fF2axMHVuZ5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   
+    <!--Datatables  buttons-->
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <!-- Buttons DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+    <!-- DataTables Buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <!-- JSZip (necesario para la generación de archivos Excel y PDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <!-- PDF Make (necesario para la generación de PDFs) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <!-- Botones para exportar a Excel, PDF y CSV -->
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <!-- Botones para imprimir -->
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
+   
+   <!-- Google Web Fonts -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"> 
+
+   <!-- Icon Font Stylesheet -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Favicons -->
+  <link href="{% static 'plantilla/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'plantilla/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.co}" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'plantilla/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'plantilla/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'plantilla/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'plantilla/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'plantilla/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'plantilla/assets/css/main.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Gp
+  * Template URL: https://bootstrapmade.com/gp-free-multipurpose-html-bootstrap-template/
+  * Updated: Aug 15 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="/" class="logo d-flex align-items-center me-auto me-lg-0">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1 class="sitename">Inicio</h1>
+
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+            <li class="dropdown active"><a href="#"><span>Constructores</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                <ul>
+                  <li><a href="/listadoConstructores/">Ver lista</a></li>
+                  <li><a href="/nuevoConstructor/">Agregar</a></li>
+                </ul>
+            </li>
+            <li class="dropdown active"><a href="#"><span>Obras Públicas</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                <ul>
+                  <li><a href="/listadoObrasPublicas/">Ver lista</a></li>
+                  <li><a href="/nuevaObraPublica/">Agregar</a></li>
+                </ul>
+            </li>
+            <li class="dropdown active"><a href="#"><span>Presupuesto</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                <ul>
+                  <li><a href="/listadoPresupuestos/">Ver lista</a></li>
+                  <li><a href="/nuevoPresupuesto/">Agregar</a></li>
+                </ul>
+            </li>
+            <li class="dropdown active"><a href="#"><span>Fecha de inicio</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                <ul>
+                  <li><a href="/listadoFechasInicio/">Ver lista</a></li>
+                  <li><a href="/nuevaFechaInicio/">Agregar</a></li>
+                </ul>
+            </li>
+            <li class="active"><a href="/listado-completo/">Reporte</a></li>
+            
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+
+    {% block contenido %}
+
+    {% endblock%}
+
+    <footer id="footer" class="footer dark-background">
+    
+        <div class="copyright">
+          <div class="container text-center">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">GP</strong> <span>All Rights Reserved</span></p>
+            <div class="credits">
+              <!-- All the links in the footer should remain intact. -->
+              <!-- You can delete the links only if you've purchased the pro version. -->
+              <!-- Licensing information: https://bootstrapmade.com/license/ -->
+              <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+              Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+            </div>
+          </div>
+        </div>
+    
+      </footer>
+    
+      <!-- Scroll Top -->
+      <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    
+      <!-- Preloader -->
+      <div id="preloader"></div>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+      <!-- Vendor JS Files -->
+      <script src="{% static 'plantilla/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+      <script src="{% static 'plantilla/assets/vendor/php-email-form/validate.js' %}"></script>
+      <script src="{% static 'plantilla/assets/vendor/aos/aos.js' %}"></script>
+      <script src="{% static 'plantilla/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+      <script src="{% static 'plantilla/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+      <script src="{% static 'plantilla/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+      <script src="{% static 'plantilla/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+      <script src="{% static 'plantilla/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+    
+      <!-- Main JS File -->
+      <script src="{% static 'plantilla/assets/js/main.js' %}"></script>
+
+      <!--Verificando mensajes de confirmacion-->
+      {% if messages %}
+      {% for mensajeConfirmacion in messages %}
+          <script>
+              if("{{mensajeConfirmacion.tags}}"
+                      =="success"){
+                  //alert(":) - {{mensajeConfirmacion}}");
+                  iziToast.success({
+                      title: '',
+                      message: '{{mensajeConfirmacion}}',
+                      position: 'topRight'
+                  });
+              }
+          </script>
+      {% endfor %} 
+  {% endif %} 
+
+  <style>
+    /* Estilo para los labels con error */
+    label.error {
+        color: #333; /* Texto gris oscuro para mayor sutileza */
+        font-weight: normal; /* No en negrita */
+        background-color: #f5c6cb; /* Fondo suave (rosado claro) */
+        padding: 6px 10px; /* Relleno ajustado */
+        border-radius: 5px; /* Bordes redondeados */
+        margin-top: 5px;
+        margin-bottom: 8px;
+        display: inline-block;
+        font-size: 14px; /* Tamaño de texto moderado */
+        box-shadow: none; /* Sin sombra */
+    }
+    
+    /* Estilo para los campos de entrada con error */
+    input.error {
+        border: 1px solid #e0a1a1; /* Borde rojo suave */
+        padding: 8px; /* Relleno ajustado */
+        border-radius: 5px; /* Bordes redondeados */
+        background-color: #f9d8d8; /* Fondo rosado muy suave */
+        color: #333; /* Texto gris oscuro */
+        font-size: 16px; /* Tamaño de texto moderado */
+        transition: all 0.2s ease-in-out; /* Transición suave pero rápida */
+    }
+    
+    /* Cambiar color del borde al pasar el ratón sobre el input con error */
+    input.error:focus {
+        border-color: #e0a1a1; /* Mantener borde suave al hacer focus */
+        background-color: #fce7e7; /* Fondo aún más claro */
+        box-shadow: none; /* Sin sombra al hacer focus */
+        outline: none; /* Eliminar contorno predeterminado */
+    }
+    
+  </style>
+
+  <script>
+      jQuery.validator.addMethod("letras", function(value, element) {            
+          return this.optional(element) || /^[A-Za-zÁÉÍÓÚÑáéíóúñ ]*$/.test(value);
+      
+      }, "Este campo solo acepta letras"); 
+
+      jQuery.validator.addMethod("cedula1",function(value,element){
+          if(true){
+              
+              var cedula =value;                       
+              //alert(cedula);
+              array = cedula.split( "" );
+              num = array.length;
+              if ( num == 10 )
+              {
+              total = 0;
+              digito = (array[9]*1);
+              for( i=0; i < (num-1); i++ )
+              {
+                  mult = 0;
+                  if ( ( i%2 ) != 0 ) {
+                  total = total + ( array[i] * 1 );
+                  }
+                  else
+                  {
+                  mult = array[i] * 2;
+                  if ( mult > 9 )
+                      total = total + ( mult - 9 );
+                  else
+                      total = total + mult;
+                  }
+              }
+              decena = total / 10;
+              decena = Math.floor( decena );
+              decena = ( decena + 1 ) * 10;
+              final = ( decena - total );
+              if ( ( final == 10 && digito == 0 ) || ( final == digito ) ) {
+              // alert( "La c\xe9dula ES v\xe1lida!!!" );
+                  return true;
+              }
+              else{
+                  return false;
+              }
+          }
+          else
+          {
+              //alert( "La c\xe9dula NO es v\xe1lida!!!" );
+              return false;
+          }
+          }
+          else
+          {
+          //alert("La c\xe9dula no puede tener menos de 10 d\xedgitos");
+          return false;
+          }
+
+          }, "CÃ©dula incorrecta");
+
+          jQuery.validator.addMethod("numbersonly", function(value, element) {
+          //return this.optional(element) || /^[a-z]+$/i.test(value);
+          return this.optional(element) || /[0-9]/.test(value);	 
+          }, "Este campo solo acepta nÃºmeros"); 
+  </script>
+</body>
+
+</html>

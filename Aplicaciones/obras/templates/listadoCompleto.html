@@ -1,0 +1,171 @@
+
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section dark-background">
+
+      <img src="{% static 'plantilla/assets/img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
+
+      <div class="container">
+        <h1 class="text-center mb-3">Listado de Constructores</h1>
+        <br><br><br>
+        <!-- Bloque para mostrar mensajes -->
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+
+        <table border="1" class="table table-bordered table-striped table-hover justify-content text-center display" id="tbl_reportes">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nombre de la Obra</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
+                    <th>Constructor</th>
+                    <th>Presupuesto</th>
+                    <th>Fecha de Inicio</th>
+            
+                </tr>
+            </thead>
+            <tbody>
+                {% for datos in datos_combinados %}
+                    <tr>
+                        <td>{{ datos.nombre_obra }}</td>
+                        <td>{{ datos.ubicacion }}</td>
+                        <td>{{ datos.estado }}</td>
+                        <td>{{ datos.constructor_nombre }}</td>
+                        <td>{{ datos.presupuesto }}</td>
+                        <td>{{ datos.fecha_inicio }}</td>
+                       
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+      </div>
+      <style>
+        
+
+        #tbl_reportes {
+            background-color: rgb(255, 255, 255); /* blanco con transparencia */
+        }
+    
+        /* Asegúrate de que el texto y otros elementos dentro de la tabla sean legibles */
+        #tbl_reportes th, #tbl_reportes td {
+            background-color: rgba(158, 158, 158, 0.9); /* opcional, para celdas específicas */
+        }
+
+        #tbl_reportes th, #tbl_reportes td {
+            color: white; /* Cambia el color del texto a blanco */
+        }
+
+        .dt-buttons .dt-button {
+            color: white; /* Texto blanco */
+            border: 1px solid #ddd; /* Borde gris claro */
+            padding: 5px 15px; /* Relleno para los botones */
+            font-size: 14px; /* Tamaño de la fuente */
+        }
+        
+        .dt-buttons .dt-button:hover {
+            background-color: #f8f8f8; /* Fondo gris claro al pasar el ratón */
+            color: black; /* Cambiar el texto a negro cuando se pasa el ratón */
+            border: 1px solid #bbb; /* Borde más oscuro */
+        }
+
+        /* Estilo para el campo de búsqueda (filtrar) */
+        .dataTables_filter input {
+            color: white !important; /* Texto blanco */
+            border: 1px solid #ddd; /* Borde gris claro */
+            background-color: transparent; /* Fondo transparente */
+        }
+
+        .dataTables_filter input:focus {
+            color: white !important; /* Texto blanco al hacer foco */
+            border: 1px solid #bbb; /* Borde gris más oscuro al hacer foco */
+        }
+
+    
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+        .alert.error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .table img {
+            width: 100px;  /* o el tamaño que prefieras */
+            height: 100px;
+            object-fit: cover;  /* Esto asegura que la imagen se recorte para ajustarse al tamaño */
+        }
+    </style>
+
+    </section><!-- /Hero Section -->
+
+    <script>
+        $(document).ready(function () {
+            $('#tbl_reportes').DataTable({
+                language: {
+                    search: "Filtrar:",
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    paginate: {
+                        first: "Primero",
+                        last: "Último",
+                        next: "Siguiente",
+                        previous: "Anterior"
+                    },
+                    zeroRecords: "No se encontraron coincidencias",
+                    infoEmpty: "No hay registros disponibles",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)"
+                },
+                order: [[0, 'asc']], // Ordenar por la primera columna (Nombre)
+                columnDefs: [
+                    { orderable: false, targets: [-1, 4] } // Deshabilitar ordenación en la columna de acciones y fotos
+                ],
+                dom: 'Bfrtip', // Activa los botones
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Excel',
+                        exportOptions: {
+                            columns: ':not(:nth-child(6)):not(:last-child)' // Excluir columna 6 (Foto) y última columna (Acciones)
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'PDF',
+                        exportOptions: {
+                            columns: ':not(:nth-child(6)):not(:last-child)' // Excluir columna 6 (Foto) y última columna (Acciones)
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir',
+                        exportOptions: {
+                            columns: ':not(:nth-child(6)):not(:last-child)' // Excluir columna 6 (Foto) y última columna (Acciones)
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+
+{% endblock %}
+
+      

@@ -1,0 +1,157 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<style>
+    /* Estilo para la sección con el fondo de la imagen */
+    #form-container {
+        background-image: url("{% static 'plantilla/assets/img/hero-bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        padding: 50px 0;
+        min-height: 100vh;
+    }
+
+    /* Estilo para el formulario para que no ocupe toda la pantalla */
+    #frm_editar_constructor {
+        background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 600px; /* Máximo ancho para el formulario */
+        margin: 0 auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+<section id="hero" class="section dark-background">
+    <div id="form-container">
+        <form style="background-color: rgba(158, 158, 158, 0.9)" enctype="multipart/form-data" action="{% url 'procesarEdicionConstructor' constructor.id %}" method="post" class="form-control justify-content text-center" id="frm_editar_constructor">
+            {% csrf_token %}
+            
+            <!-- Bloque para mostrar mensajes -->
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <label for="txt_nombre"><b>Nombre:</b></label>
+            <input type="text" name="txt_nombre" id="txt_nombre" class="form-control" value="{{ constructor.nombre }}" required>
+            <br>
+
+            <label for="txt_apellido"><b>Apellido:</b></label>
+            <input type="text" name="txt_apellido" id="txt_apellido" class="form-control" value="{{ constructor.apellido }}" required>
+            <br>
+
+            <label for="txt_foto"><b>Foto:</b></label>
+            <input type="file" name="txt_foto" id="txt_foto" class="form-control">
+            <br><br>
+
+            {% if constructor.foto %}
+                <label><b>Foto actual:</b></label><br>
+                <img src="{{ constructor.foto.url }}" alt="Foto actual" width="100px" height="100px">
+                <br>
+            {% endif %}
+            <br>
+            <label for="txt_cedula"><b>Cédula:</b></label>
+            <input type="text" name="txt_cedula" id="txt_cedula" class="form-control" value="{{ constructor.cedula }}" required>
+            <br>
+
+            <label for="txt_direccion"><b>Dirección:</b></label>
+            <textarea name="txt_direccion" id="txt_direccion" class="form-control" rows="3" required>{{ constructor.direccion }}</textarea>
+            <br>
+
+            <label for="txt_telefono"><b>Teléfono:</b></label>
+            <input type="text" name="txt_telefono" id="txt_telefono" class="form-control" value="{{ constructor.telefono }}" required>
+            <br>
+
+            <label for="txt_email"><b>Email:</b></label>
+            <input type="email" name="txt_email" id="txt_email" class="form-control" value="{{ constructor.email }}" required>
+            <br>
+
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="{% url 'listadoConstructores' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+    </div>
+</section>
+<script>
+    $.validator.addMethod("rfc", function(value, element) {
+        return this.optional(element) || /^[A-Z&Ñ]{3,4}\d{6}[A-Z0-9]{3}$/.test(value);
+    }, "Por favor ingrese un RFC válido");
+</script>
+<script>
+    $("#txt_foto").fileinput({
+            //Language: "es",
+            allowedFileExtensions: ["png|jpg|jpeg"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            dhowClose: false
+    });
+</script>
+<script>
+    
+        $("#frm_nuevo_constructor").validate({
+            rules:{
+                "txt_nombre": {
+                    required: true,
+                    letras: true,
+                },
+                "txt_apellido": {
+                    required: true,
+                    letras: true,
+                },
+                "txt_rfc": {
+                    required: true,
+                    
+                },
+                "txt_direccion": {
+                    required: true,
+                },
+                "txt_telefono": {
+                    required: true,
+                    minlength: 10,  // Aseguramos que el teléfono tenga al menos 10 caracteres
+                    maxlength: 15,  // Limitar a un máximo de 15 caracteres
+                    digits: true,  // Solo se permiten números
+                },
+                "txt_email": {
+                    required: true,
+                    email: true,  // Validación de correo electrónico
+                },
+            },
+            messages:{
+                "txt_nombre": {
+                    required: "Por favor ingrese el nombre del constructor",
+                    letras: "El nombre solo puede contener letras",
+                },
+                "txt_apellido": {
+                    required: "Por favor ingrese el apellido del constructor",
+                    letras: "El apellido solo puede contener letras",
+                },
+                "txt_rfc": {
+                    required: "Por favor ingrese el RFC del constructor",
+                    
+                },
+                "txt_direccion": {
+                    required: "Por favor ingrese la dirección del constructor",
+                },
+                "txt_telefono": {
+                    required: "Por favor ingrese el teléfono del constructor",
+                    minlength: "El teléfono debe tener al menos 10 caracteres",
+                    maxlength: "El teléfono no puede exceder los 15 caracteres",
+                    digits: "El teléfono solo puede contener números",
+                },
+                "txt_email": {
+                    required: "Por favor ingrese el correo electrónico del constructor",
+                    email: "Por favor ingrese un correo electrónico válido",
+                },
+            },
+
+        });
+    </script>
+
+{% endblock %}
+
+
